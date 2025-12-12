@@ -1,0 +1,1 @@
+You need to proceed with front-end development only. We are not building any back-end at this stage, so avoid all server-side tasks such as integrations, API development, or database modelling. Use mock data / test data to ensure all front-end workflows can be fully tested and demonstrated.
