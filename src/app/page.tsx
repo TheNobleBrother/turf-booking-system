@@ -3,6 +3,8 @@ import SportsGrid from "@/src/components/sports-grid"
 import HowItWorks from "@/src/components/how-it-works"
 import CTASection from "@/src/components/cta-section"
 import LocateUsSection from "@/src/components/locate-us-section"
+import BlogsSection from "@/src/components/blogs-section"
+import HomeClubHouseSection from "@/src/components/home-club-house-section"
 
 export default function Home() {
   return (
@@ -10,7 +12,9 @@ export default function Home() {
       <HeroSection />
       <SportsGrid />
       <HowItWorks />
-      <CTASection />
+      <HomeClubHouseSection />
+      {/* <CTASection /> */}
+      <BlogsSection />
       <LocateUsSection />
     </main>
   )

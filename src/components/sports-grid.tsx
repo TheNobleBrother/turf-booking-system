@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useInView } from "@/src/hooks/use-in-view"
 import { Card } from "@/src/components/ui/card"
 import { Button } from "@/src/components/ui/button"
 import { Zap, ArrowRight } from "lucide-react"
@@ -11,7 +11,7 @@ const sports = [
     id: "cricket",
     name: "Cricket",
     description: "Book full cricket grounds for matches and practice sessions",
-    icon: "🏏",
+    // icon: "🏏",
     bgColor: "from-emerald-600 to-green-700",
     lightBg: "from-emerald-50 to-green-50",
     stats: "2-3 hour slots • Large grounds",
@@ -30,7 +30,7 @@ const sports = [
     stats: "Hourly slots • Indoor courts",
     accentColor: "text-blue-600",
     image:
-    "https://images.pexels.com/photos/342361/pexels-photo-342361.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&dpr=1",
+      "https://images.pexels.com/photos/342361/pexels-photo-342361.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&dpr=1",
     overlay: "from-blue-900/40 to-blue-900/10",
   },
   {
@@ -49,30 +49,19 @@ const sports = [
 ]
 
 export default function SportsGrid() {
-  const [fade, setFade] = useState(0)
-
-  useEffect(() => {
-    const hero = document.getElementById("hero")
-    const handle = () => {
-      const heroHeight = hero?.getBoundingClientRect().height ?? 1
-      const progress = Math.min(Math.max((window.scrollY - heroHeight * 0.3) / (heroHeight * 0.8), 0), 1)
-      setFade(progress)
-    }
-    handle()
-    window.addEventListener("scroll", handle, { passive: true })
-    return () => window.removeEventListener("scroll", handle)
-  }, [])
+  const { ref, isInView } = useInView({ threshold: 0.4 })
 
   return (
     <section
-      className="py-24 bg-linear-to-b from-background via-secondary/3 to-background relative overflow-hidden transition-all duration-700"
-      style={{ opacity: 1 - fade * 0.4, transform: `translateY(${fade * 12}px)` }}
+      ref={ref}
+      className={`py-8 bg-linear-to-b from-background via-secondary/3 to-background relative overflow-hidden transition-all duration-[800ms] ease-out ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-24"
+        }`}
     >
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -z-10" />
 
       <div className="container mx-auto px-4">
-        <div className="text-center mb-20">
+        <div className="text-center mb-8">
           <h2 className="text-5xl md:text-6xl font-black text-foreground mb-6 text-balance">
             Play Your Favourite Sport
           </h2>
@@ -85,8 +74,8 @@ export default function SportsGrid() {
         <div className="grid md:grid-cols-3 gap-8">
           {sports.map((sport) => (
             <Link key={sport.id} href={`/browse?sport=${sport.id}`}>
-            <Card className="overflow-hidden h-full card-hover border-0 shadow-xl group cursor-pointer">
-              <div className="relative h-64 overflow-hidden bg-linear-to-br from-secondary/20 to-primary/10">
+              <Card className="overflow-hidden h-full card-hover border-0 shadow-xl group cursor-pointer">
+                <div className="relative h-48 overflow-hidden bg-linear-to-br from-secondary/20 to-primary/10">
                   <img
                     src={sport.image || "/placeholder.svg"}
                     alt={sport.name}
@@ -107,18 +96,18 @@ export default function SportsGrid() {
                   </div>
                 </div>
 
-                <div className={`bg-linear-to-br ${sport.lightBg} p-8`}>
+                <div className={`bg-linear-to-br ${sport.lightBg} p-5 h-full flex flex-col`}>
                   <h3
-                    className={`text-3xl font-black text-foreground mb-3 flex items-center gap-2 group-hover:${sport.accentColor} transition-colors`}
+                    className={`text-2xl font-black text-foreground mb-2 flex items-center gap-2 group-hover:${sport.accentColor} transition-colors`}
                   >
                     {sport.name}
                     <Zap className={`w-5 h-5 ${sport.accentColor}`} />
                   </h3>
-                  <p className="text-muted-foreground text-base mb-6 leading-relaxed font-medium">
+                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed font-medium">
                     {sport.description}
                   </p>
                   <div className="pt-6 border-t border-black/5 dark:border-white/10">
-                    <p className={`text-xs font-black tracking-widest ${sport.accentColor} uppercase mb-4`}>
+                    <p className={`text-[10px] font-black tracking-widest ${sport.accentColor} uppercase mb-3`}>
                       {sport.stats}
                     </p>
                     <Button className="w-full bg-linear-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 font-bold group/btn">

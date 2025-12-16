@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { FacebookIcon, TwitterIcon, InstagramIcon, LinkedinIcon } from "lucide-react"
@@ -21,9 +22,8 @@ export default function Footer() {
   return (
     <footer
       id="footer-section"
-      className={`bg-linear-to-r from-foreground/5 to-primary/5 border-t border-border/40 mt-20 transition-all duration-700 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      }`}
+      className={`bg-linear-to-r from-foreground/5 to-primary/5 border-t border-border/40 mt-20 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        }`}
     >
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-4 gap-8 mb-12">

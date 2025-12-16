@@ -1,74 +1,49 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Card } from "@/src/components/ui/card"
-
-const posts = [
-  {
-    title: "Turf care: how we keep pitches game-ready",
-    excerpt: "From drainage to grass height, a peek behind the scenes of match-quality prep.",
-    link: "#",
-  },
-  {
-    title: "Peak hours vs. smart booking",
-    excerpt: "Tips to grab the best slots and save more on your favorite venues.",
-    link: "#",
-  },
-  {
-    title: "Community leagues you can join",
-    excerpt: "Weekend football, midweek badminton, and cricket nets—open to all skill levels.",
-    link: "#",
-  },
-]
+import { Button } from "@/src/components/ui/button"
+// Wait, previous imports used @/src/components/ui/button. correcting import.
+import { ArrowRight } from "lucide-react"
+import { useInView } from "@/src/hooks/use-in-view"
 
 export default function CTASection() {
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => {
-      const el = document.getElementById("blog-section")
-      if (!el) return
-      const rect = el.getBoundingClientRect()
-      if (rect.top < window.innerHeight * 0.85) setVisible(true)
-    }
-    onScroll()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+  const { ref, isInView } = useInView({ threshold: 0.5 })
 
   return (
-    <section
-      id="blog-section"
-      className={`py-20 bg-background transition-all duration-700 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
-          <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-primary font-semibold">From the blog</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mt-2">Stories from the turf</h2>
-            <p className="text-muted-foreground max-w-2xl mt-3">
-              Updates, tips, and behind-the-scenes to help you book smarter and play better.
-            </p>
-          </div>
-          <Link href="#" className="text-primary font-semibold underline">
-            View all posts
-          </Link>
-        </div>
+    <section ref={ref} className="py-16 relative overflow-hidden bg-black">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://images.pexels.com/photos/976873/pexels-photo-976873.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt="Sports Action"
+          className="w-full h-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
+      </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {posts.map((post) => (
-            <Card key={post.title} className="p-6 h-full border-border/60 shadow-sm hover:shadow-lg transition-shadow">
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-3">Featured</p>
-              <h3 className="text-xl font-bold text-foreground mb-3">{post.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{post.excerpt}</p>
-              <Link href={post.link} className="text-primary font-semibold text-sm">
-                Read more →
-              </Link>
-            </Card>
-          ))}
+      <div className="container mx-auto px-4 relative z-10">
+        <div className={`max-w-4xl transition-all duration-[800ms] ease-out transform ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}>
+          <h2 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+            Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Dominate</span> the Field?
+          </h2>
+          <p className="text-xl text-gray-300 mb-10 max-w-2xl font-medium leading-relaxed">
+            Don't let the game wait. Book your preferred venue in seconds and experience sports like never before.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link href="/browse">
+              <button className="px-8 py-4 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-primary/25 transition-all flex items-center gap-2 group">
+                Book a Slot Now
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
+            <Link href="/auth/signup">
+              <button className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-xl text-lg border border-white/20 transition-all">
+                Join Community
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

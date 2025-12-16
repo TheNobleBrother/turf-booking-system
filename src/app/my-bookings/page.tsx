@@ -37,16 +37,27 @@ const stats = [
 export default function MyBookingsPage() {
   return (
     <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-5xl font-black text-foreground mb-3">
+      {/* Hero Banner */}
+      <div className="relative w-full h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden mb-12">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/images/dashboard-new-img.avif"
+            alt="My Bookings Banner"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="relative z-10 text-center px-4 mt-8">
+          <h1 className="text-5xl font-black text-white mb-3 drop-shadow-lg">
             My Bookings
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-white/90 drop-shadow-md font-medium">
             View and manage all your venue bookings
           </p>
         </div>
+      </div>
+
+      <div className="container mx-auto px-4 pb-12">
 
         {/* Booking Stats */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
