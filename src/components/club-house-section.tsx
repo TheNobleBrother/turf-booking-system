@@ -71,10 +71,10 @@ export default function ClubHouseSection() {
                 {/* Hero Text */}
                 <div className="relative z-10 text-center px-4 mb-8 animate-in fade-in zoom-in duration-700">
                     <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4 drop-shadow-2xl">
-                        Elite Club Houses
+                        Indoor Games Arena
                     </h1>
                     <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto font-medium drop-shadow-lg">
-                        Experience luxury and leisure at our premium club houses featuring swimming pools, gyms, and more.
+                        Challenge your friends to a game of pool, carrom, or chess at our premium indoor game centers.
                     </p>
                 </div>
 
@@ -160,7 +160,7 @@ export default function ClubHouseSection() {
                     {/* Club House Grid */}
                     <div className="lg:col-span-3">
                         <div className="mb-6">
-                            <h2 className="text-2xl font-bold text-foreground">Available Clubhouses</h2>
+                            <h2 className="text-2xl font-bold text-foreground">Available Game Centers</h2>
                             <p className="text-muted-foreground">{filteredClubhouses.length} locations found</p>
                         </div>
 
@@ -205,6 +205,7 @@ export default function ClubHouseSection() {
                                                     <div className="flex flex-wrap gap-2">
                                                         {club.amenities.slice(0, 4).map((amenity) => {
                                                             const Icon = amenityIcons[amenity];
+                                                            if (!Icon) return null;
                                                             return (
                                                                 <div
                                                                     key={amenity}

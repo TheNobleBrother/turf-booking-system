@@ -56,7 +56,7 @@ export default async function SignupPage({
 
         {/* Footer Links */}
         <div className="mt-8 text-center space-y-4 text-sm text-muted-foreground">
-          <p>
+          {/* <p>
             Already have an account?{" "}
             <Link
               href="/auth/login"
@@ -64,14 +64,14 @@ export default async function SignupPage({
             >
               Sign in
             </Link>
-          </p>
-          <Link
+          </p> */}
+          {/* <Link
             href="/"
             className="inline-flex items-center gap-2 hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to home
-          </Link>
+          </Link> */}
         </div>
       </div>
     </main>

@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import Navbar from "@/src/components/navbar"
+import ConditionalNavbar from "@/src/components/conditional-navbar"
 import Footer from "@/src/components/footer"
 import StoreProvider from "@/src/store/provider"
 import { Toaster } from "sonner"
@@ -44,7 +44,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased flex flex-col min-h-screen`}>
         <StoreProvider>
-          <Navbar />
+          <ConditionalNavbar />
           <main className="flex-1">{children}</main>
           <Footer />
           <Toaster richColors position="top-right" />

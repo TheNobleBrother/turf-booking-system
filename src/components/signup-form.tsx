@@ -10,6 +10,7 @@ import { useAppDispatch } from "@/src/store/hooks";
 import { signup } from "@/src/store/userSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 interface SignupFormProps {
   readonly role: string;
@@ -210,6 +211,15 @@ export default function SignupForm({ role }: SignupFormProps) {
             Sign in
           </Link>
         </p>
+        <div className="mt-4 text-center space-y-4 text-sm text-muted-foreground">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to home
+          </Link>
+        </div>
       </div>
     </form>
   );
