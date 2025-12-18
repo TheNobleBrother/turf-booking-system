@@ -1,41 +1,56 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
-import { useAppDispatch } from "@/src/store/hooks"
-import { login } from "@/src/store/userSlice"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { Button } from "@/src/components/ui/button";
+import { Input } from "@/src/components/ui/input";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/src/utils/supabase/client";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const dispatch = useAppDispatch()
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
     try {
-      dispatch(login({ email, password }))
-      toast.success("Signed in successfully")
-      router.push("/")
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (data.user) {
+        toast.success("Signed in successfully");
+        router.push("/");
+        router.refresh();
+      }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Login failed"
-      toast.error(message)
+      const message = err instanceof Error ? err.message : "Login failed";
+      toast.error(message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="login-email" className="block text-sm font-medium text-foreground mb-2">
+        <label
+          htmlFor="login-email"
+          className="block text-sm font-medium text-foreground mb-2"
+        >
           Email Address
         </label>
         <Input
@@ -50,7 +65,10 @@ export default function LoginForm() {
       </div>
 
       <div>
-        <label htmlFor="login-password" className="block text-sm font-medium text-foreground mb-2">
+        <label
+          htmlFor="login-password"
+          className="block text-sm font-medium text-foreground mb-2"
+        >
           Password
         </label>
         <Input
@@ -69,14 +87,21 @@ export default function LoginForm() {
           <input type="checkbox" className="w-4 h-4 rounded border-border" />
           <span>Remember me</span>
         </label>
-        <a href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+        <a
+          href="/auth/forgot-password"
+          className="text-sm text-primary hover:underline"
+        >
           Forgot password?
         </a>
       </div>
 
-      <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={loading}>
+      <Button
+        type="submit"
+        className="w-full bg-primary hover:bg-primary/90"
+        disabled={loading}
+      >
         {loading ? "Signing in..." : "Sign In"}
       </Button>
     </form>
-  )
+  );
 }

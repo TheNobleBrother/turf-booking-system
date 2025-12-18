@@ -6,11 +6,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
-import { useAppDispatch } from "@/src/store/hooks";
-import { signup } from "@/src/store/userSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { createClient } from "@/src/utils/supabase/client";
 
 interface SignupFormProps {
   readonly role: string;
@@ -26,7 +25,6 @@ export default function SignupForm({ role }: SignupFormProps) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +32,7 @@ export default function SignupForm({ role }: SignupFormProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -45,24 +43,38 @@ export default function SignupForm({ role }: SignupFormProps) {
 
     setLoading(true);
     try {
-      dispatch(
-        signup({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          password: formData.password,
-          role,
-        })
-      );
-      toast.success("Account created successfully");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-        confirmPassword: "",
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name,
+            phone: formData.phone,
+            role: role,
+          },
+        },
       });
-      router.push("/auth/login");
+
+      if (error) {
+        setError(error.message);
+        toast.error(error.message);
+        return;
+      }
+
+      if (data.user) {
+        toast.success(
+          "Account created! Please check your email to verify your account."
+        );
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          password: "",
+          confirmPassword: "",
+        });
+        router.push("/auth/login");
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Signup failed";
       setError(message);
