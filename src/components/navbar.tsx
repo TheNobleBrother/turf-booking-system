@@ -17,9 +17,16 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const isTransparentPage =
-    ["/", "/browse", "/blogs", "/my-bookings"].includes(pathname) ||
-    pathname.startsWith("/clubhouses");
-  const isActive = (path: string) => pathname === path;
+    ["/", "/browse", "/blogs", "/my-bookings", "/profile"].includes(pathname) ||
+    pathname.startsWith("/clubhouses") ||
+    pathname.startsWith("/blogs/") ||
+    pathname.startsWith("/venue/");
+  const isActive = (path: string) => {
+    if (path === "/blogs") return pathname.startsWith("/blogs");
+    if (path === "/browse")
+      return pathname.startsWith("/browse") || pathname.startsWith("/venue");
+    return pathname === path;
+  };
 
   // Listen to Supabase auth state
   useEffect(() => {
@@ -151,6 +158,25 @@ export default function Navbar() {
               />
             </Link>
             <Link
+              href="/blogs"
+              className={`font-bold transition-all duration-300 relative group drop-shadow-md ${
+                isActive("/blogs")
+                  ? isNavbarTransparent
+                    ? "text-white"
+                    : "text-primary"
+                  : `${
+                      isNavbarTransparent ? "text-white" : "text-foreground/80"
+                    } hover:text-primary`
+              }`}
+            >
+              <span>Blogs</span>
+              <span
+                className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
+                  isActive("/blogs") ? "w-full" : "w-0 group-hover:w-full"
+                }`}
+              />
+            </Link>
+            <Link
               href="/my-bookings"
               className={`font-bold transition-all duration-300 relative group drop-shadow-md ${
                 isActive("/my-bookings")
@@ -170,9 +196,9 @@ export default function Navbar() {
               />
             </Link>
             <Link
-              href="/blogs"
+              href="/profile"
               className={`font-bold transition-all duration-300 relative group drop-shadow-md ${
-                isActive("/blogs")
+                isActive("/profile")
                   ? isNavbarTransparent
                     ? "text-white"
                     : "text-primary"
@@ -181,10 +207,10 @@ export default function Navbar() {
                     } hover:text-primary`
               }`}
             >
-              <span>Blogs</span>
+              <span>Profile</span>
               <span
                 className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
-                  isActive("/blogs") ? "w-full" : "w-0 group-hover:w-full"
+                  isActive("/profile") ? "w-full" : "w-0 group-hover:w-full"
                 }`}
               />
             </Link>
@@ -200,12 +226,24 @@ export default function Navbar() {
             {currentUser && (
               <Link
                 href="/profile"
-                className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-full border border-border hover:border-primary transition-colors cursor-pointer"
+                className={`hidden sm:flex items-center gap-2 px-1.5 py-1.5 pr-4 rounded-full border transition-all duration-300 cursor-pointer group/profile active:scale-95 ${
+                  isNavbarTransparent
+                    ? "bg-white/10 border-white/20 hover:bg-white/20 text-white"
+                    : "bg-background border-border hover:border-primary text-foreground shadow-sm"
+                }`}
               >
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                  <UserIcon className="w-5 h-5 text-primary" />
+                <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xs shadow-md group-hover/profile:scale-105 transition-transform">
+                  {(
+                    currentUser.user_metadata?.name?.charAt(0) ||
+                    currentUser.email?.charAt(0) ||
+                    "U"
+                  ).toUpperCase()}
                 </div>
-                <span className="font-semibold text-foreground">Profile</span>
+                <span className="font-bold text-sm truncate max-w-[120px]">
+                  {currentUser.user_metadata?.name ||
+                    currentUser.email?.split("@")[0] ||
+                    "Profile"}
+                </span>
               </Link>
             )}
             <button
@@ -217,6 +255,113 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      <div
+        className={`fixed inset-0 z-40 bg-background transition-transform duration-300 md:hidden pt-24 ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="container mx-auto px-4 flex flex-col gap-6 text-center">
+          {currentUser && (
+            <div className="py-4 border-b border-border mb-4">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-primary to-accent mx-auto mb-3 flex items-center justify-center text-white text-2xl font-black shadow-lg">
+                {(
+                  currentUser.user_metadata?.name?.charAt(0) ||
+                  currentUser.email?.charAt(0) ||
+                  "U"
+                ).toUpperCase()}
+              </div>
+              <p className="font-bold text-lg text-foreground truncate max-w-[200px] mx-auto">
+                {currentUser.user_metadata?.name ||
+                  currentUser.email?.split("@")[0]}
+              </p>
+              <p className="text-sm text-muted-foreground truncate max-w-[250px] mx-auto">
+                {currentUser.email}
+              </p>
+            </div>
+          )}
+
+          <Link
+            href="/"
+            className="text-2xl font-bold hover:text-primary transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            Home
+          </Link>
+          <Link
+            href="/browse"
+            className="text-2xl font-bold hover:text-primary transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            Browse Venues
+          </Link>
+          <Link
+            href="/clubhouses"
+            className="text-2xl font-bold hover:text-primary transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            Clubhouses
+          </Link>
+          <Link
+            href="/my-bookings"
+            className="text-2xl font-bold hover:text-primary transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            My Bookings
+          </Link>
+          <Link
+            href="/blogs"
+            className="text-2xl font-bold hover:text-primary transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            Blogs
+          </Link>
+
+          {currentUser ? (
+            <div className="flex flex-col gap-4 mt-6 pt-6 border-t border-border">
+              <Link
+                href="/profile"
+                className="text-2xl font-bold hover:text-primary transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Profile
+              </Link>
+              <Button
+                variant="destructive"
+                size="lg"
+                className="font-bold text-xl py-6 rounded-xl mt-4"
+                onClick={async () => {
+                  const supabase = createClient();
+                  await supabase.auth.signOut();
+                  setIsOpen(false);
+                  router.push("/");
+                  router.refresh();
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3 mt-8">
+              <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full font-bold"
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link href="/auth/signup" onClick={() => setIsOpen(false)}>
+                <Button size="lg" className="w-full font-bold">
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
       <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
     </>
   );

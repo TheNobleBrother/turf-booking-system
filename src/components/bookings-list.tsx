@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card } from "@/src/components/ui/card"
-import { Button } from "@/src/components/ui/button"
+import { useState } from "react";
+import { Card } from "@/src/components/ui/card";
+import { Button } from "@/src/components/ui/button";
 
 const mockBookings = [
   {
@@ -35,15 +35,41 @@ const mockBookings = [
     status: "completed",
     confirmationCode: "PCB003",
   },
-]
+];
 
-export default function BookingsList() {
-  const [filter, setFilter] = useState("all")
+interface BookingsListProps {
+  searchQuery?: string;
+  searchDate?: string;
+  searchTime?: string;
+}
+
+export default function BookingsList({
+  searchQuery = "",
+  searchDate = "",
+  searchTime = "",
+}: BookingsListProps) {
+  const [filter, setFilter] = useState("all");
 
   const filteredBookings = mockBookings.filter((booking) => {
-    if (filter === "all") return true
-    return booking.status === filter
-  })
+    // Tab filter
+    const matchesTab = filter === "all" || booking.status === filter;
+
+    // Search query filter (venue name or id)
+    const matchesQuery =
+      !searchQuery ||
+      booking.venue.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      booking.confirmationCode
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+    // Date filter
+    const matchesDate = !searchDate || booking.date === searchDate;
+
+    // Time filter (this is a bit tricky with ranges, but we'll do simple contains)
+    const matchesTime = !searchTime || booking.time.includes(searchTime);
+
+    return matchesTab && matchesQuery && matchesDate && matchesTime;
+  });
 
   return (
     <div className="space-y-6">
@@ -72,20 +98,30 @@ export default function BookingsList() {
               <div className="grid md:grid-cols-5 gap-4 items-center">
                 {/* Venue & Date */}
                 <div className="md:col-span-2">
-                  <h3 className="font-bold text-foreground text-lg mb-1">{booking.venue}</h3>
-                  <p className="text-sm text-muted-foreground">{booking.date}</p>
-                  <p className="text-sm text-muted-foreground">{booking.time}</p>
+                  <h3 className="font-bold text-foreground text-lg mb-1">
+                    {booking.venue}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {booking.date}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {booking.time}
+                  </p>
                 </div>
 
                 {/* Court & Amount */}
                 <div className="text-center">
                   <p className="text-xs text-muted-foreground">Court</p>
-                  <p className="font-semibold text-foreground">{booking.court}</p>
+                  <p className="font-semibold text-foreground">
+                    {booking.court}
+                  </p>
                 </div>
 
                 <div className="text-center">
                   <p className="text-xs text-muted-foreground">Amount</p>
-                  <p className="font-bold text-primary text-lg">${booking.amount}</p>
+                  <p className="font-bold text-primary text-lg">
+                    ${booking.amount}
+                  </p>
                 </div>
 
                 {/* Status & Actions */}
@@ -95,15 +131,20 @@ export default function BookingsList() {
                       booking.status === "confirmed"
                         ? "bg-green-100 text-green-800"
                         : booking.status === "pending"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-gray-100 text-gray-800"
                     }`}
                   >
-                    {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                    {booking.status.charAt(0).toUpperCase() +
+                      booking.status.slice(1)}
                   </span>
 
                   {booking.status === "confirmed" && (
-                    <Button variant="outline" size="sm" className="text-xs bg-transparent">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs bg-transparent"
+                    >
                       View Details
                     </Button>
                   )}
@@ -114,10 +155,12 @@ export default function BookingsList() {
         ) : (
           <div className="text-center py-12">
             <p className="text-muted-foreground mb-4">No bookings found</p>
-            <Button className="bg-primary hover:bg-primary/90">Browse Venues</Button>
+            <Button className="bg-primary hover:bg-primary/90">
+              Browse Venues
+            </Button>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

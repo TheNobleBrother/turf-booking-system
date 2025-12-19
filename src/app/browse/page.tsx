@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import VenueGrid from "@/src/components/venue-grid"
-import FilterSidebar from "@/src/components/filter-sidebar"
-import { Card } from "@/src/components/ui/card"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
-import { Search, MapPin, Calendar, Clock } from "lucide-react"
+import { useState } from "react";
+import VenueGrid from "@/src/components/venue-grid";
+import FilterSidebar from "@/src/components/filter-sidebar";
+import { Card } from "@/src/components/ui/card";
+import { Button } from "@/src/components/ui/button";
+import { Input } from "@/src/components/ui/input";
+import { Search, MapPin, Calendar, Clock } from "lucide-react";
 
 export default function BrowsePage() {
   const [filters, setFilters] = useState({
@@ -15,15 +15,15 @@ export default function BrowsePage() {
     rating: 0,
     availability: "all",
     location: "",
-  })
+  });
 
   // State for search inputs
-  const [query, setQuery] = useState("")
-  const [date, setDate] = useState("")
-  const [time, setTime] = useState("")
+  const [query, setQuery] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
 
   // Construct search object for VenueGrid
-  const search = { query, date, time }
+  const search = { query, date, time };
 
   return (
     <main className="min-h-screen bg-background">
@@ -115,7 +115,9 @@ export default function BrowsePage() {
           {/* Venue Grid */}
           <div className="lg:col-span-3">
             <div className="mb-6">
-              <h1 className="text-3xl font-bold text-foreground">Available Venues</h1>
+              <h1 className="text-3xl font-bold text-foreground">
+                Available Venues
+              </h1>
               <p className="text-muted-foreground">500+ venues ready to book</p>
             </div>
             <VenueGrid filters={filters} search={search} />
@@ -123,5 +125,5 @@ export default function BrowsePage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

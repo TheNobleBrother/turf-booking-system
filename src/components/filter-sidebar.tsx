@@ -1,43 +1,69 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Card } from "@/src/components/ui/card"
-import { Button } from "@/src/components/ui/button"
-import { RotateCcw, Filter } from "lucide-react"
+import type React from "react";
+import { Card } from "@/src/components/ui/card";
+import { Button } from "@/src/components/ui/button";
+import { RotateCcw, Filter } from "lucide-react";
 
 interface FilterSidebarProps {
   filters: {
-    sport: string
-    priceRange: [number, number]
-    rating: number
-    availability: string
-    location: string
-  }
-  setFilters: (filters: any) => void
+    sport: string;
+    priceRange: [number, number];
+    rating: number;
+    availability: string;
+    location: string;
+  };
+  setFilters: (filters: any) => void;
 }
 
 const sports = [
-  { id: "all", name: "All Sports", icon: "🎯", color: "from-blue-500 to-blue-600" },
-  { id: "cricket", name: "Cricket", icon: "🏏", color: "from-amber-500 to-amber-600" },
-  { id: "badminton", name: "Badminton", icon: "🏸", color: "from-red-500 to-red-600" },
-  { id: "football", name: "Football", icon: "⚽", color: "from-green-500 to-green-600" },
-]
+  {
+    id: "all",
+    name: "All Sports",
+    icon: "🎯",
+    color: "from-blue-500 to-blue-600",
+  },
+  {
+    id: "cricket",
+    name: "Cricket",
+    icon: "🏏",
+    color: "from-amber-500 to-amber-600",
+  },
+  {
+    id: "badminton",
+    name: "Badminton",
+    icon: "🏸",
+    color: "from-red-500 to-red-600",
+  },
+  {
+    id: "football",
+    name: "Football",
+    icon: "⚽",
+    color: "from-green-500 to-green-600",
+  },
+];
 
-export default function FilterSidebar({ filters, setFilters }: FilterSidebarProps) {
+export default function FilterSidebar({
+  filters,
+  setFilters,
+}: FilterSidebarProps) {
   const handleSportChange = (sport: string) => {
-    setFilters({ ...filters, sport })
-  }
+    setFilters({ ...filters, sport });
+  };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({ ...filters, priceRange: [0, Number.parseInt(e.target.value)] })
-  }
+    setFilters({
+      ...filters,
+      priceRange: [0, Number.parseInt(e.target.value)],
+    });
+  };
 
   const handleRatingChange = (rating: number) => {
-    setFilters({ ...filters, rating })
-  }
+    setFilters({ ...filters, rating });
+  };
 
   return (
-    <div className="space-y-6 sticky top-24">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
         <Filter className="w-5 h-5 text-primary" />
@@ -134,5 +160,5 @@ export default function FilterSidebar({ filters, setFilters }: FilterSidebarProp
         Clear Filters
       </Button>
     </div>
-  )
+  );
 }
